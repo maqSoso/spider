@@ -25,7 +25,7 @@ def get_directory():
         res.append(dict1)
     return res
 
-def get_anchor(directory,href):
+def get_anchor(href):
     html = requests.get(href).text
     soup = BeautifulSoup(html,'lxml')
 
@@ -37,17 +37,8 @@ def get_anchor(directory,href):
         hot = item.find('span', class_='DyListCover-hot').text
         user = item.find('h2', class_='DyListCover-user').text
 
-
         res.append('房间名：'+ name +  '\n'+'房间号:'+ numb + '\n' + '热度:'+ hot + '\n' + '主播:'+ user +'\n' +'========================' + '\n')
     return res
-
-def get_noble(name,numb):
-    url = 'www.douyu.com/' + numb
-    html = requests.get(url).text
-    soup = BeautifulSoup(html,'lxml')
-
-
-
 
 def save(detail_list, directory_title):
     filename = directory_title + '.txt'
@@ -57,11 +48,11 @@ def save(detail_list, directory_title):
 
 def main():
     results = get_directory()
-    for result in results[6:7]:
-        href = result['url']
-        directory_title = result['name']
-        detail_list = get_anchor(directory_title, href)
-        save(detail_list,directory_title)
+    result = results[6]
+    href = result['url']
+    directory_title = result['name']
+    detail_list = get_anchor(href)
+    save(detail_list,directory_title)
 
 if __name__ == '__main__':
     main()
