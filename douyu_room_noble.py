@@ -24,16 +24,16 @@ def main():
     ActionChains(driver).move_to_element(move).perform()   #鼠标移动操作
     table = driver.find_elements_by_class_name('NobleRankList-item')
 
-    noble_list = list()
+    #noble_list = list()
 
     for item in table:
-        print(item.text)
+        print(item.text.replace('\n','  '))    #我就不知道第十个人名怎么就打不出来
         print('=======')
 
-        tmp = item.text.split('\n')
-        noble_list.append(tmp[-1])  #去掉牌子，只取后面的名字
+        #tmp = item.text.split('\n')
+        #noble_list.append(tmp[-1])  #去掉牌子，只取后面的名字
 
-    print(noble_list)   #输入形式还没想好
+    #print(noble_list)   #输入形式还没想好
 
     driver.close()
     driver.quit()
