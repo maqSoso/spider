@@ -27,8 +27,8 @@ def main():
     #noble_list = list()
 
     for item in table:
-        print(item.text.replace('\n','  '))    #我就不知道第十个人名怎么就打不出来
-        print('=======')
+        print(item.text.replace('\n','  ') )    #我就不知道第十个人名怎么就打不出来
+        #print('=======')
 
         #tmp = item.text.split('\n')
         #noble_list.append(tmp[-1])  #去掉牌子，只取后面的名字
