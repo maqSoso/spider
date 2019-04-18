@@ -19,7 +19,6 @@ def main():
     nobel[1].click() #总共有三个，[1]为贵族class
     noble_num = nobel[1].text[3:-1]  #房间贵族数
     print('当前房间贵宾数为：'+noble_num + '\n')
-
     #time.sleep(1)
     move = driver.find_element_by_class_name('NobleRankTips')
     ActionChains(driver).move_to_element(move).perform()   #鼠标移动操作
