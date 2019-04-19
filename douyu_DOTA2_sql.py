@@ -7,10 +7,8 @@ def get_DOTA2_anchors():
     url = 'https://www.douyu.com/g_DOTA2'
     html = requests.get(url).text
     soup = BeautifulSoup(html,'lxml')
-
     anchor = soup.find_all('div',class_='DyListCover HeaderCell is-href')
     res = list()
-
     for item in anchor[:20]:
         name = item.find('h3')['title']
         numb = item.find('a')['href'][1:]
@@ -26,11 +24,12 @@ def get_DOTA2_anchors():
         #res.append('房间名：'+ name +  '\n'+'房间号:'+ numb + '\n' + '热度:'+ hot + '\n' + '主播:'+ user +'\n' +'========================' + '\n')
     return res
 
+
 def writeTosql(detail_list,curtime,dbconnextion):
     cur = dbconnextion.cursor()
     table_name = 'dota_'+curtime
     sql_create_table = 'create table '+ table_name + '(Name varchar(30),User varchar(30),Hot varchar(10),Numb int)'
-    cur.execute(sql_create_table)
+    cur.execute(sql_create_table)  #新建一张表
 
     for i in detail_list:
         sql_insert = "insert into " + table_name + "(Name,User,Hot,Numb) values('%s', '%s','%s', '%d')"
@@ -65,7 +64,9 @@ def main():
     detail_list = get_DOTA2_anchors()
     writeTosql(detail_list,curtime,db)
     readFromsql(curtime,db)
+
     db.commit()
     db.close()
+
 if __name__ == '__main__':
     main()
