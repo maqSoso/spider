@@ -118,7 +118,7 @@ def main():
     print('以爬取完房间号信息')
     db = connect_mysql()
     thread_list = list()
-    driver = start_webdriver()  #事先打开一个webdriver，否则多进程会打开很多个
+    driver = start_webdriver()  #事先打开一个webdriver，否则多进程会打开很多个chrome
     for t in range(len(rooms)):
         thread_list.append(myThread(db,driver,rooms[t]))
     for t in thread_list:
