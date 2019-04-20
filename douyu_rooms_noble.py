@@ -4,7 +4,15 @@ import requests
 from bs4 import BeautifulSoup
 import threading
 import pymysql
-
+from selenium.webdriver.common.action_chains import ActionChains
+'''
+1、爬取斗鱼中所有直播分类
+2、在每个分类中爬取主播们的名字、热度和房间号
+3、连接至mysql
+4、创建一个webdriver
+5、启用多线程同时爬取各个游戏分类里房间的贵族数
+6、断开mysql，关闭webderiver
+'''
 def get_directory(): #找出直播分类
     url = 'https://www.douyu.com/directory'
     html = requests.get(url).text
