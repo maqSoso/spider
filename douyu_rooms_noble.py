@@ -82,7 +82,7 @@ def get_noble_num(db,driver,rooms):
                 time.sleep(2)
                 count+=1
         write_mysql(db,item['directory'],item['anchor'],item['hot'],noble_num)
-        print(item['directory']+'---'+item['anchor'] + ':' + noble_num )
+        print(item['directory']+'---'+item['anchor'] + '---'+ item['hot'] + '---'+ noble_num )
     driver.close()
 
 def connect_mysql():
