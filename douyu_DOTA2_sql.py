@@ -25,8 +25,8 @@ def get_DOTA2_anchors():
     return res
 
 
-def writeTosql(detail_list,curtime,dbconnextion):
-    cur = dbconnextion.cursor()
+def writeTosql(detail_list,curtime,dbconnection):
+    cur = dbconnection.cursor()
     table_name = 'dota_'+curtime
     sql_create_table = 'create table '+ table_name + '(Name varchar(30),User varchar(30),Hot varchar(10),Numb int)'
     cur.execute(sql_create_table)  #新建一张表
@@ -37,9 +37,9 @@ def writeTosql(detail_list,curtime,dbconnextion):
         cur.execute(sql_insert % data)
 
 
-def readFromsql(curtime,dbconnextion):
+def readFromsql(curtime,dbconnection):
     table_name = 'dota_' + curtime
-    cursor = dbconnextion.cursor()
+    cursor = dbconnection.cursor()
     sql_read = 'select * from ' + table_name
     cursor.execute(sql_read)
     try:
