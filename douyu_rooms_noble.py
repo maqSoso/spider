@@ -10,7 +10,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 2、在每个分类中爬取主播们的名字、热度和房间号
 3、连接至mysql
 4、创建一个webdriver
-5、启用多线程同时爬取各个游戏分类里房间的贵族数
+5、启用多线程同时爬取各个游戏分类里房间的贵族数，这样要打开多个chrome 
 6、断开mysql，关闭webderiver
 '''
 def get_directory(): #找出直播分类
@@ -51,7 +51,7 @@ def get_rooms(directory): #找出房间号
         res.append(tmp)
     return res
 
-def start_webdriver():
+def get_noble_num(db,rooms):
     options = webdriver.ChromeOptions()
     options.add_argument('--no-sandbox')  # 不太知道这个有什么影响
     options.add_argument('headless')
@@ -59,18 +59,12 @@ def start_webdriver():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     driver = webdriver.Chrome(options=options)
-    return driver
-
-def quit_webdriver(driver):
-    driver.quit()
-
-def get_noble_num(db,driver,rooms):
     for item in rooms:  #只查看每款游戏前15的主播
         url = 'https://www.douyu.com' + item['room_num']
         driver.get(url)
-        time.sleep(4)
+        time.sleep(3)
         count = 0
-        while count < 4:
+        while count < 10:
             nobel = driver.find_elements_by_class_name("ChatTabContainer-titleWraper--tabLi")
             #move = driver.find_element_by_class_name('NobleRankTips')
             #ActionChains(driver).move_to_element(move).perform()  # 鼠标移动操作
@@ -79,11 +73,12 @@ def get_noble_num(db,driver,rooms):
             if noble_num != '0':
                 break
             else:
-                time.sleep(2)
+                time.sleep(1)
                 count+=1
         write_mysql(db,item['directory'],item['anchor'],item['hot'],noble_num)
         print(item['directory']+'---'+item['anchor'] + '---'+ item['hot'] + '---'+ noble_num )
     driver.close()
+    driver.quit()
 
 def connect_mysql():
     db = pymysql.connect('localhost', 'root', '123456', 'testdb')
@@ -101,14 +96,13 @@ def close_mysql(db):
     db.close()
 
 class myThread (threading.Thread):
-    def __init__(self, db,driver,rooms):
+    def __init__(self, db,rooms):
         threading.Thread.__init__(self)
         self.rooms = rooms
         self.db = db
-        self.driver = driver
     def run(self):
         print ("开始进程：" )
-        get_noble_num(self.db,self.driver,self.rooms)
+        get_noble_num(self.db,self.rooms)
         print ("退出线程：" )
 
 def main():
@@ -118,14 +112,12 @@ def main():
     print('以爬取完房间号信息')
     db = connect_mysql()
     thread_list = list()
-    driver = start_webdriver()  #事先打开一个webdriver，否则多进程会打开很多个chrome
-    for t in range(len(rooms)):
-        thread_list.append(myThread(db,driver,rooms[t]))
+    for t in range(len(rooms)): #这样就只是根据游戏种类开了7个线程，很僵硬。（期待线程池，未完待续。。。）
+        thread_list.append(myThread(db,rooms[t]))
     for t in thread_list:
         t.start()
     for t in thread_list:
         t.join()
-    quit_webdriver()
     close_mysql(db)
 
 if __name__ == '__main__':
