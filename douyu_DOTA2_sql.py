@@ -21,7 +21,6 @@ def get_DOTA2_anchors():
             'numb':numb
         }
         res.append(d)
-        #res.append('房间名：'+ name +  '\n'+'房间号:'+ numb + '\n' + '热度:'+ hot + '\n' + '主播:'+ user +'\n' +'========================' + '\n')
     return res
 
 
@@ -64,7 +63,6 @@ def main():
     detail_list = get_DOTA2_anchors()
     writeTosql(detail_list,curtime,db)
     readFromsql(curtime,db)
-
     db.commit()
     db.close()
 
