@@ -19,7 +19,7 @@ def get_directory(): #找出直播分类
     soup = BeautifulSoup(html, 'lxml')
     partitons = soup.find_all('li', class_='layout-Classify-item')
     res = list()
-    for item in partitons[:7]:  #只找前7款游戏
+    for item in partitons[0:1]+partitons[2:3]+partitons[6:7]:  #只找3款游戏
         href = item.find('a')['href']
         game = item.find('a').text
         dict = {
@@ -101,9 +101,9 @@ class myThread (threading.Thread):
         self.rooms = rooms
         self.db = db
     def run(self):
-        print ("开始进程：" )
+        print ("开始进程：")
         get_noble_num(self.db,self.rooms)
-        print ("退出线程：" )
+        print ("退出线程：")
 
 def main():
     dirs = get_directory()
@@ -112,7 +112,7 @@ def main():
     print('以爬取完房间号信息')
     db = connect_mysql()
     thread_list = list()
-    for t in range(len(rooms)): #这样就只是根据游戏种类开了7个线程，很僵硬。（期待线程池，未完待续。。。）
+    for t in range(len(rooms)): #这样就只是根据游戏种类开了固定数量线程，很僵硬。（期待线程池，未完待续。。。）
         thread_list.append(myThread(db,rooms[t]))
     for t in thread_list:
         t.start()
