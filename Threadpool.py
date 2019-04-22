@@ -109,7 +109,7 @@ def main():
     rooms = get_rooms(dirs)
     print('以爬取完房间号信息')
     db = connect_mysql()
-    pool = ThreadPoolExecutor(max_workers=3)
+    pool = ThreadPoolExecutor(max_workers=3)  #调用线程池
     #pool.map(get_noble_num,rooms) #用这个方法简短，但是不灵活
     all_task = list()
     for i in rooms:
